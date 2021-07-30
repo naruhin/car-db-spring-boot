@@ -28,7 +28,7 @@ or run it from IntellijIDEA
 
 ![Run from IntellijIDEA](screenshots/run.png "Run from IntellijIDEA")
 
-### When application is started
+### When application started
 
 #### Our request collection in Postman.
 ![Request collection in Postman](screenshots/1.png "Request collection in Postman")
@@ -38,8 +38,8 @@ There are GET, POST, PUT and DELETE requests.
 #### Saving entity to database
 ![save entity to database](screenshots/save.png "save entity to database")
 
-#### View all entitys in database
-![view all entitys in database](screenshots/viewall.png "view all entitys in database")
+#### View all entity's in database
+![view all entity's in database](screenshots/viewall.png "view all entity's in database")
 
 #### View entity by id in database
 ![view entity by id in database](screenshots/viewbyid.png "view entity by id in database")
@@ -47,8 +47,8 @@ There are GET, POST, PUT and DELETE requests.
 #### Update entity by id in database
 ![update entity by id in database](screenshots/update.png "update entity by id in database")
 
-#### Delete all entitys in database
-![delete all entitys in database](screenshots/delete all.png "delete all entitys in database")
+#### Delete all entity's in database
+![delete all entity's in database](screenshots/deleteall.png "delete all entity's in database")
 
 #### Delete entity by id in database
 ![delete entity by id in database](screenshots/deletebyid.png "delete entity by id in database")
