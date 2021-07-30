@@ -18,11 +18,13 @@
 
     mvn clean install
 
+
 3. Make sure your PostgreSQL database is running.
 4. Run .jar file.
 
     
     java -jar spring-boot-example-hillel-hw5.-0.0.1-SNAPSHOT.jar
+
 
 or run it from IntellijIDEA
 
