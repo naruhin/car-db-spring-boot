@@ -42,6 +42,19 @@ or run it from IntellijIDEA
 
 There are GET, POST, PUT and DELETE requests.
 
+Import requests collection using link
+>https://www.getpostman.com/collections/37231fe0c58d2456d9f5
+
+1. In Postman click on Import button.
+
+![save entity to database](screenshots/import1.png "save entity to database")
+
+2. Paste link in box and click Continue
+
+![save entity to database](screenshots/import2.png "save entity to database")
+
+3. Collection is ready!
+
 #### Saving entity to database
 ![save entity to database](screenshots/save.png "save entity to database")
 
