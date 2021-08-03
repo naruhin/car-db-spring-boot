@@ -26,7 +26,7 @@
 4. Run .jar file.
 
     
->java -jar spring-boot-example-hillel-hw5.-0.0.1-SNAPSHOT.jar
+>java -jar spring-boot-example.jar
 
 
 or run it from IntellijIDEA
