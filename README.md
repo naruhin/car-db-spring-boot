@@ -22,7 +22,7 @@
 >mvn clean install
 
 
-3. Make sure your PostgreSQL database is running.
+3. Make sure your PostgreSQL database is running and db 'machines' is created!
 4. Run .jar file.
 
     
