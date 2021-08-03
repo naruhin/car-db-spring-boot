@@ -14,7 +14,7 @@
 ---
 ### 	:computer: How to start application?
 
-1. Make a fork from this project and clone repository.
+1. Make a fork from this project or clone repository.
 
 2. Build this application using Maven. 
 
