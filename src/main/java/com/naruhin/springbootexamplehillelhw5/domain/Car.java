@@ -21,6 +21,8 @@ public class Car {
 
     private String color;
 
+    private boolean deleted;
+
     public Long getId() {
         return id;
     }
@@ -69,5 +71,9 @@ public class Car {
         this.color = color;
     }
 
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 
 }
