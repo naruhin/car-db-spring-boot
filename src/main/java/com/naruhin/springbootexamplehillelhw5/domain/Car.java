@@ -1,6 +1,8 @@
 package com.naruhin.springbootexamplehillelhw5.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -20,6 +22,8 @@ public class Car {
     private String engine;
 
     private String color;
+
+    private boolean deleted;
 
     public Long getId() {
         return id;
@@ -69,5 +73,14 @@ public class Car {
         this.color = color;
     }
 
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    @JsonIgnore
+    public boolean isDeleted() {
+        return deleted;
+    }
 
 }
