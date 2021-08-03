@@ -1,4 +1,4 @@
-## Database of cars
+## :car: Database of cars 
 
     This Spring Boot application is simple example of working Web Application on Spring Framework.
     It represents a simple API to work with PostgreSQL database that storage information about cars.
@@ -63,6 +63,9 @@ Import requests collection using link
 
 #### View entity by id in database
 ![view entity by id in database](screenshots/viewbyid.png "view entity by id in database")
+
+#### View all entity's by manufacturer in database
+![view entity by id in database](screenshots/viewallbymanufacturer.png "view entity by id in database")
 
 #### Update entity by id in database
 ![update entity by id in database](screenshots/update.png "update entity by id in database")
