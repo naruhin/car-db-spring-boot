@@ -54,15 +54,17 @@ public class CarRestController {
     @PutMapping("/cars/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Car updateCar(@PathVariable("id") long id, @RequestBody Car car) {
-
         return repository.findById(id)
                 .map(entity -> {
-                    entity.setManufacturer(car.getManufacturer());
-                    entity.setModel(car.getModel());
-                    entity.setBodyStyle(car.getBodyStyle());
-                    entity.setEngine(car.getEngine());
-                    entity.setColor(car.getColor());
-                    return repository.save(entity);
+                    if(!entity.isDeleted()){
+                        entity.setManufacturer(car.getManufacturer());
+                        entity.setModel(car.getModel());
+                        entity.setBodyStyle(car.getBodyStyle());
+                        entity.setEngine(car.getEngine());
+                        entity.setColor(car.getColor());
+                        return repository.save(entity);
+                    }
+                    return repository.findByIdAndDeletedIsFalse(id);
                 })
                 .orElseThrow(() -> new EntityNotFoundException("Employee with id = Not found"));
     }
