@@ -5,14 +5,14 @@
 
 ---
 
-### Technologies used in the application: 
+### :robot: Technologies used in the application: 
 
     Spring Boot, Spring Data, Hibernate, PostgreSQL
 
     As client - Postman
 
 ---
-### How to start application?
+### 	:computer: How to start application?
 
 1. Make a fork from this project and clone repository.
 
@@ -37,10 +37,10 @@ or run it from IntellijIDEA
 
 ### When application started
 
-#### Our request collection in Postman.
+#### Our request collection in Postman. :books:
 ![Request collection in Postman](screenshots/1.png "Request collection in Postman")
 
-There are GET, POST, PUT and DELETE requests.
+There are GET, POST, PUT and PATCH requests.
 
 Import requests collection using link
 >https://www.getpostman.com/collections/37231fe0c58d2456d9f5
@@ -69,6 +69,8 @@ Import requests collection using link
 
 #### Update entity by id in database
 ![update entity by id in database](screenshots/update.png "update entity by id in database")
+
+_If there is no entity with such id, EntityNotFoundException will be thrown!_
 
 #### Delete all entity's in database
 ![delete all entity's in database](screenshots/deleteall.png "delete all entity's in database")
