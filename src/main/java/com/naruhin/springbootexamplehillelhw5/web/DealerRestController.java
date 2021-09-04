@@ -1,7 +1,9 @@
 package com.naruhin.springbootexamplehillelhw5.web;
 
 
+import com.naruhin.springbootexamplehillelhw5.domain.Address;
 import com.naruhin.springbootexamplehillelhw5.domain.Dealer;
+import com.naruhin.springbootexamplehillelhw5.repository.AddressRepository;
 import com.naruhin.springbootexamplehillelhw5.repository.DealerRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,18 +15,21 @@ import java.util.Collection;
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DealerRestController {
+    private final AddressRepository addressRepository;
     private final DealerRepository dealerRepository;
 
-    public DealerRestController(DealerRepository dealerRepository) {
+    public DealerRestController(AddressRepository addressRepository, DealerRepository dealerRepository) {
+        this.addressRepository = addressRepository;
         this.dealerRepository = dealerRepository;
     }
 
-
-
     //Операция сохранения дилера в базу данных
-    @PostMapping("/dealers")
+    @PostMapping("/dealers/{addressId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Dealer saveAddress(@RequestBody Dealer dealer) {
+    public Dealer saveAddress(@RequestBody Dealer dealer, @PathVariable long addressId) {
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new EntityNotFoundException("Address not found with id = " + addressId));
+        dealer.setAddress(address);
         return dealerRepository.save(dealer);
     }
 

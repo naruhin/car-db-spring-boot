@@ -1,7 +1,9 @@
 package com.naruhin.springbootexamplehillelhw5.web;
 
+import com.naruhin.springbootexamplehillelhw5.domain.Address;
 import com.naruhin.springbootexamplehillelhw5.domain.Dealer;
 import com.naruhin.springbootexamplehillelhw5.domain.Manufacturer;
+import com.naruhin.springbootexamplehillelhw5.repository.AddressRepository;
 import com.naruhin.springbootexamplehillelhw5.repository.ManufacturerRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,16 +16,20 @@ import java.util.Collection;
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ManufacturerRestController {
     private final ManufacturerRepository manufacturerRepository;
+    private final AddressRepository addressRepository;
 
-    public ManufacturerRestController(ManufacturerRepository manufacturerRepository) {
+    public ManufacturerRestController(ManufacturerRepository manufacturerRepository, AddressRepository addressRepository) {
         this.manufacturerRepository = manufacturerRepository;
+        this.addressRepository = addressRepository;
     }
 
-
     //Операция сохранения производителя в базу данных
-    @PostMapping("/manufacturers")
+    @PostMapping("/manufacturers/{addressId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Manufacturer saveManufacturer(@RequestBody Manufacturer manufacturer) {
+    public Manufacturer saveManufacturer(@RequestBody Manufacturer manufacturer, @PathVariable long addressId) {
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new EntityNotFoundException("Address not found with id = " + addressId));
+        manufacturer.setAddress(address);
         return manufacturerRepository.save(manufacturer);
     }
 

@@ -1,15 +1,19 @@
 package com.naruhin.springbootexamplehillelhw5.web;
 
 import com.naruhin.springbootexamplehillelhw5.domain.Car;
+import com.naruhin.springbootexamplehillelhw5.domain.Dealer;
+import com.naruhin.springbootexamplehillelhw5.domain.Manufacturer;
+import com.naruhin.springbootexamplehillelhw5.domain.ServiceStation;
 import com.naruhin.springbootexamplehillelhw5.repository.CarRepository;
+import com.naruhin.springbootexamplehillelhw5.repository.DealerRepository;
+import com.naruhin.springbootexamplehillelhw5.repository.ManufacturerRepository;
+import com.naruhin.springbootexamplehillelhw5.repository.ServiceStationRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -17,15 +21,25 @@ import java.util.Optional;
 public class CarRestController {
 
     private final CarRepository repository;
+    private final ManufacturerRepository manufacturerRepository;
+    private final DealerRepository dealerRepository;
+    private final ServiceStationRepository serviceStationRepository;
 
-    public CarRestController(CarRepository repository) {
+    public CarRestController(CarRepository repository, ManufacturerRepository manufacturerRepository, DealerRepository dealerRepository, ServiceStationRepository serviceStationRepository) {
         this.repository = repository;
+        this.manufacturerRepository = manufacturerRepository;
+        this.dealerRepository = dealerRepository;
+        this.serviceStationRepository = serviceStationRepository;
     }
 
+
     //Операция сохранения машины в базу данных
-    @PostMapping("/cars")
+    @PostMapping("/cars/manufacturers/{manufacturerId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Car saveCar(@RequestBody Car car) {
+    public Car saveCar(@RequestBody Car car, @PathVariable long manufacturerId) {
+        Manufacturer manufacturer = manufacturerRepository.findById(manufacturerId)
+                .orElseThrow(() -> new EntityNotFoundException("Manufacturer not found with id = " + manufacturerId));
+        car.setManufacturer(manufacturer);
         return repository.save(car);
     }
 
@@ -35,14 +49,6 @@ public class CarRestController {
     public Collection<Car> getAllCars() {
         return repository.findAll();
     }
-
-
-   /* //Получение списка машин по производителю
-    @GetMapping("/cars/manufacturer/{manufacturer}")
-    @ResponseStatus(HttpStatus.OK)
-    public Collection<Car> getAllCarsByManufacturer(@PathVariable("manufacturer") String manufacturer) {
-        return repository.findAllByManufacturerAndDeletedIsFalse(manufacturer);
-    }*/
 
     //Получения машины по id
     @GetMapping("/cars/{id}")
@@ -67,7 +73,33 @@ public class CarRestController {
                 .orElseThrow(() -> new EntityNotFoundException("Car with id = Not found"));
     }
 
-    //TODO Old delete methods
+
+    @PatchMapping("/cars/{carId}/dealers/{dealerId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Car updateCarDealer(@PathVariable long carId, @PathVariable long dealerId){
+        Dealer dealer = dealerRepository.findById(dealerId)
+                .orElseThrow(() -> new EntityNotFoundException("Dealer not found with id = " + dealerId));
+        return repository.findById(carId)
+                .map(entity -> {
+                    entity.setDealer(dealer);
+                    return  repository.save(entity);
+                })
+                .orElseThrow(() -> new EntityNotFoundException("Car with id = Not found"));
+    }
+
+    @PatchMapping("/cars/{carId}/service_stations/{serviceStationId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Car updateCarServiceStation(@PathVariable long carId, @PathVariable long serviceStationId){
+        ServiceStation serviceStation = serviceStationRepository.findById(serviceStationId)
+                .orElseThrow(() -> new EntityNotFoundException("Service Station not found with id = " + serviceStationId));
+        return repository.findById(carId)
+                .map(entity -> {
+                    entity.setServiceStation(serviceStation);
+                    return  repository.save(entity);
+                })
+                .orElseThrow(() -> new EntityNotFoundException("Car with id = Not found"));
+    }
+
 
     //Удаление всех машин
     @DeleteMapping("/cars")
