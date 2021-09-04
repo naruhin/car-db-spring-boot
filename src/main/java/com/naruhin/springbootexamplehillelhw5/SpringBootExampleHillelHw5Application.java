@@ -9,5 +9,4 @@ public class SpringBootExampleHillelHw5Application {
     public static void main(String[] args) {
         SpringApplication.run(SpringBootExampleHillelHw5Application.class, args);
     }
-
 }
