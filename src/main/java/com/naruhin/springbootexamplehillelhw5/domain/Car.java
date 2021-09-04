@@ -1,86 +1,48 @@
 package com.naruhin.springbootexamplehillelhw5.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "cars")
+@Table(name = "CARS")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Car {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    private String manufacturer;
+    @ManyToOne(cascade=CascadeType.DETACH)
+    @JoinColumn(name="manufacturer_id" , nullable = false)
+    private Manufacturer manufacturer;
 
     private String model;
 
-    private String bodyStyle;
-
-    private String engine;
-
     private String color;
 
-    private boolean deleted;
+    @ManyToOne(cascade=CascadeType.DETACH)
+    @JoinColumn(name="dealer_id")
+    private Dealer dealer;
 
-    public Long getId() {
-        return id;
-    }
+    @ManyToOne(cascade=CascadeType.DETACH)
+    @JoinColumn(name="service_station_id")
+    private ServiceStation serviceStation;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private String bodyStyle;
 
-    public String getManufacturer() {
-        return manufacturer;
-    }
+    @OneToOne(cascade=CascadeType.MERGE)
+    @JoinColumn(name = "engine_id", nullable = false)
+    private Engine engine;
 
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
+    public Car(String model, String color, String bodyStyle) {
         this.model = model;
-    }
-
-    public String getBodyStyle() {
-        return bodyStyle;
-    }
-
-    public void setBodyStyle(String type) {
-        this.bodyStyle = type;
-    }
-
-    public String getEngine() {
-        return engine;
-    }
-
-    public void setEngine(String engine) {
-        this.engine = engine;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
         this.color = color;
+        this.bodyStyle = bodyStyle;
     }
-
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    @JsonIgnore
-    public boolean isDeleted() {
-        return deleted;
-    }
-
 }
