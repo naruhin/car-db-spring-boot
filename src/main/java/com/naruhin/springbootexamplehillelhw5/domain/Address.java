@@ -28,17 +28,17 @@ public class Address {
     private Long zipCode;
 
     @OneToMany(mappedBy = "address", fetch = FetchType.EAGER,
-            cascade = CascadeType.DETACH)
+            cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<ServiceStation> serviceStations;
 
     @OneToMany(mappedBy = "address", fetch = FetchType.EAGER,
-            cascade = CascadeType.DETACH)
+            cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Dealer> dealers;
 
     @OneToMany(mappedBy = "address", fetch = FetchType.EAGER,
-            cascade = CascadeType.DETACH)
+            cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Manufacturer> manufacturers;
 

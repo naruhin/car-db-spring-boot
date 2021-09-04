@@ -20,7 +20,7 @@ public class Car {
     private Long id;
 
     @ManyToOne(cascade=CascadeType.DETACH)
-    @JoinColumn(name="manufacturer_id" , nullable = false)
+    @JoinColumn(name="manufacturer_id")
     private Manufacturer manufacturer;
 
     private String model;
@@ -38,8 +38,8 @@ public class Car {
 
     private String bodyStyle;
 
-    @OneToOne(cascade=CascadeType.MERGE)
-    @JoinColumn(name = "engine_id", nullable = false)
+    @OneToOne(cascade=CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "engine_id")
     private Engine engine;
 
     public Car(String model, String color, String bodyStyle) {
