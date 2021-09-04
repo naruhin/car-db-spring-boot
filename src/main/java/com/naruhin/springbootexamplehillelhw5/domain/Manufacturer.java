@@ -1,6 +1,6 @@
 package com.naruhin.springbootexamplehillelhw5.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +23,11 @@ public class Manufacturer {
     @ManyToOne(cascade=CascadeType.MERGE, fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "address_id")
     private Address address;
+
+    @OneToMany(mappedBy = "manufacturer", fetch = FetchType.EAGER,
+            cascade = CascadeType.DETACH)
+    @JsonIgnore
+    private Set<Car> cars;
 
     public Manufacturer(String name) {
         this.name = name;

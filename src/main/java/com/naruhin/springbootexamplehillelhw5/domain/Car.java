@@ -1,6 +1,7 @@
 package com.naruhin.springbootexamplehillelhw5.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,6 +33,7 @@ public class Car {
 
     @ManyToOne(cascade=CascadeType.DETACH)
     @JoinColumn(name="service_station_id")
+    @JsonIgnore
     private ServiceStation serviceStation;
 
     private String bodyStyle;

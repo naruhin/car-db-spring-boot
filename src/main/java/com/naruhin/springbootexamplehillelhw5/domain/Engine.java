@@ -1,5 +1,6 @@
 package com.naruhin.springbootexamplehillelhw5.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +28,7 @@ public class Engine {
     private String power;
 
     @OneToOne(mappedBy = "engine")
+    @JsonIgnore
     private Car car;
 
     public Engine(String type, String engineVolume, String engineLayoutType, String torque, String power) {

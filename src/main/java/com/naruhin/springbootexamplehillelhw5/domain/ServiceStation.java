@@ -26,7 +26,7 @@ public class ServiceStation {
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToMany(mappedBy="serviceStation")
+    @OneToMany(mappedBy="serviceStation", fetch = FetchType.EAGER)
     private List<Car> cars = new ArrayList<>();
 
     public ServiceStation(String name) {

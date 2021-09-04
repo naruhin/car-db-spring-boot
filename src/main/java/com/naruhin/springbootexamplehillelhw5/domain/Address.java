@@ -1,5 +1,6 @@
 package com.naruhin.springbootexamplehillelhw5.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,14 +29,17 @@ public class Address {
 
     @OneToMany(mappedBy = "address", fetch = FetchType.EAGER,
             cascade = CascadeType.DETACH)
+    @JsonIgnore
     private Set<ServiceStation> serviceStations;
 
     @OneToMany(mappedBy = "address", fetch = FetchType.EAGER,
             cascade = CascadeType.DETACH)
+    @JsonIgnore
     private Set<Dealer> dealers;
 
     @OneToMany(mappedBy = "address", fetch = FetchType.EAGER,
             cascade = CascadeType.DETACH)
+    @JsonIgnore
     private Set<Manufacturer> manufacturers;
 
 
