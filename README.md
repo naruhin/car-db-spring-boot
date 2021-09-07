@@ -10,6 +10,8 @@
     Spring Boot, Spring Data, Hibernate, PostgreSQL
 
     As client - Postman
+    
+    For documentation - Swagger
 
 ---
 ### 	:computer: How to start application?
