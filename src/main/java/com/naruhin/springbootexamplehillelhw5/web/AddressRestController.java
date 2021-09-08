@@ -19,28 +19,28 @@ public class AddressRestController {
         this.addressRepository = addressRepository;
     }
 
-    //Операция сохранения машины в базу данных
+    //Операция сохранения адресов в базу данных
     @PostMapping("/addresses")
     @ResponseStatus(HttpStatus.CREATED)
     public Address saveAddress(@RequestBody Address address) {
         return addressRepository.save(address);
     }
 
-    //Получение списка машин
+    //Получение списка адресов
     @GetMapping("/addresses")
     @ResponseStatus(HttpStatus.OK)
     public Collection<Address> getAllAddresses() {
         return addressRepository.findAll();
     }
 
-    //Удаление всех машин
+    //Удаление всех адресов
     @DeleteMapping("/addresses")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeAllAddresses() {
         addressRepository.deleteAll();
     }
 
-    //Обновление машины
+    //Обновление адреса
     @PutMapping("/addresses/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Address updateAddress(@PathVariable("id") long id, @RequestBody Address address) {
