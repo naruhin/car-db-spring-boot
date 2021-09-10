@@ -1,6 +1,5 @@
 package com.naruhin.springbootexamplehillelhw5.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
