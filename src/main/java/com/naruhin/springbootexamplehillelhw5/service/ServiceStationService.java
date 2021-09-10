@@ -5,13 +5,13 @@ import com.naruhin.springbootexamplehillelhw5.domain.ServiceStation;
 import java.util.Collection;
 
 public interface ServiceStationService {
-    public ServiceStation saveServiceStation(ServiceStation serviceStation,long addressId);
+    ServiceStation saveServiceStation(ServiceStation serviceStation,long addressId);
 
-    public Collection<ServiceStation> getAllServiceStations();
+    Collection<ServiceStation> getAllServiceStations();
 
-    public ServiceStation getServiceStationById(long serviceStationId);
+    ServiceStation getServiceStationById(long serviceStationId);
 
-    public void removeAllServiceStations();
+    void removeAllServiceStations();
 
-    public ServiceStation updateServiceStation(long id, ServiceStation serviceStation);
+    ServiceStation updateServiceStation(long id, ServiceStation serviceStation);
 }

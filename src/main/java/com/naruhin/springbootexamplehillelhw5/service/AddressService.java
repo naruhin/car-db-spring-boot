@@ -5,14 +5,14 @@ import com.naruhin.springbootexamplehillelhw5.domain.Address;
 import java.util.Collection;
 
 public interface AddressService {
-    public Address saveAddress(Address address);
+    Address saveAddress(Address address);
 
-    public Collection<Address> getAllAddresses();
+    Collection<Address> getAllAddresses();
 
-    public Address getAddressByID(long id);
+    Address getAddressByID(long id);
 
-    public void removeAllAddresses();
+    void removeAllAddresses();
 
-    public Address updateAddress(long id, Address address);
+    Address updateAddress(long id, Address address);
 
 }

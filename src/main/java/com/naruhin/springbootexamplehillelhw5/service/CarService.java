@@ -6,19 +6,19 @@ import java.util.Collection;
 
 public interface CarService {
 
-    public Car saveCar(Car car, long manufacturerId);
+    Car saveCar(Car car, long manufacturerId);
 
-    public Collection<Car> getAllCars();
+    Collection<Car> getAllCars();
 
-    public Car getCarById(long id);
+    Car getCarById(long id);
 
-    public Car updateCar(long id, Car car);
+    Car updateCar(long id, Car car);
 
-    public Car updateCarDealer(long carId, long dealerId);
+    Car updateCarDealer(long carId, long dealerId);
 
-    public Car updateCarServiceStation(long carId, long serviceStationId);
+    Car updateCarServiceStation(long carId, long serviceStationId);
 
-    public void removeAllCars();
+    void removeAllCars();
 
-    public void removeCarsById(long id);
+    void removeCarsById(long id);
 }

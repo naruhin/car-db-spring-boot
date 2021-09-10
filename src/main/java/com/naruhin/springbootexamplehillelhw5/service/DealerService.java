@@ -6,14 +6,14 @@ import java.util.Collection;
 
 public interface DealerService {
 
-    public Dealer saveDealer(Dealer dealer, long addressId);
+    Dealer saveDealer(Dealer dealer, long addressId);
 
-    public Collection<Dealer> getAllDealers();
+    Collection<Dealer> getAllDealers();
 
-    public Dealer getDealerById(long id);
+    Dealer getDealerById(long id);
 
-    public void removeAllDealers();
+    void removeAllDealers();
 
-    public Dealer updateDealer(long id, Dealer dealer);
+    Dealer updateDealer(long id, Dealer dealer);
 
 }
