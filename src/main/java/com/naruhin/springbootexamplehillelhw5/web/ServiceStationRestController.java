@@ -1,62 +1,30 @@
 package com.naruhin.springbootexamplehillelhw5.web;
 
-import com.naruhin.springbootexamplehillelhw5.config.AddressMapper;
-import com.naruhin.springbootexamplehillelhw5.config.ServiceStationMapper;
-import com.naruhin.springbootexamplehillelhw5.domain.Address;
-import com.naruhin.springbootexamplehillelhw5.domain.ServiceStation;
 import com.naruhin.springbootexamplehillelhw5.dto.ServiceStationDTO;
-import com.naruhin.springbootexamplehillelhw5.service.AddressService;
-import com.naruhin.springbootexamplehillelhw5.service.ServiceStationService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.Collection;
-import java.util.List;
 
-@RestController
-@RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ServiceStationRestController {
-    private final AddressService addressService;
-    private final ServiceStationService serviceStationService;
+@Tag(name = "Service Station", description = "Car API")
 
-    public ServiceStationRestController(AddressService addressService, ServiceStationService serviceStationService) {
-        this.addressService = addressService;
-        this.serviceStationService = serviceStationService;
-    }
+public interface ServiceStationRestController {
+    @Operation(summary = "Add a new Service Station", description = "endpoint for creating an entity", tags = {"Service Station"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Service Station created"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "409", description = "MService Station already exists")})
+    ServiceStationDTO saveServiceStation(ServiceStationDTO serviceStationDTO, long addressId);
 
-    //Операция сохранения сервисного в базу данных
-    @PostMapping("/service_stations/{addressId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ServiceStationDTO saveServiceStation(@RequestBody ServiceStationDTO serviceStationDTO, @PathVariable long addressId) {
-        Address address = addressService.getAddressByID(addressId);
-        ServiceStation serviceStation = ServiceStationMapper.INSTANCE.toServiceStation(serviceStationDTO);
+    @Operation(summary = "Get list of Service Stations", description = "endpoint for getting list of entities", tags = {"Service Station"})
+    Collection<ServiceStationDTO> getAllServiceStations();
 
-        serviceStationDTO.setAddress(AddressMapper.INSTANCE.toAddressDto(address));
+    @Operation(summary = "Remove all Service Stations", description = "endpoint for deleting an entity", tags = {"Service Station"})
+    void removeAllServiceStations();
 
-        return ServiceStationMapper.INSTANCE.toServiceStationDto(serviceStationService.saveServiceStation(serviceStation,addressId));
-    }
+    @Operation(summary = "Update a Service Station", description = "endpoint for updating an entity", tags = {"Service Station"})
+    ServiceStationDTO updateServiceStation(long id, ServiceStationDTO serviceStationDTO);
 
-    //Получение списка сервисных центров
-    @GetMapping("/service_stations")
-    @ResponseStatus(HttpStatus.OK)
-    public Collection<ServiceStationDTO> getAllServiceStations() {
-        Collection<ServiceStation> serviceStations = serviceStationService.getAllServiceStations();
-        return ServiceStationMapper.INSTANCE.map((List<ServiceStation>) serviceStations);
-    }
-
-    //Удаление всех сервисных центров
-    @DeleteMapping("/service_stations")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeAllServiceStations() {
-        serviceStationService.removeAllServiceStations();
-    }
-
-    //Обновление сервисного центра
-    @PutMapping("/service_stations/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ServiceStationDTO updateServiceStation(@PathVariable("id") long id, @RequestBody ServiceStationDTO serviceStationDTO) {
-        ServiceStation serviceStation = ServiceStationMapper.INSTANCE.toServiceStation(serviceStationDTO);
-        return  ServiceStationMapper.INSTANCE.toServiceStationDto(serviceStationService.updateServiceStation(id, serviceStation));
-    }
 }

@@ -1,61 +1,30 @@
 package com.naruhin.springbootexamplehillelhw5.web;
 
-
-import com.naruhin.springbootexamplehillelhw5.config.AddressMapper;
-import com.naruhin.springbootexamplehillelhw5.config.DealerMapper;
-import com.naruhin.springbootexamplehillelhw5.domain.Address;
-import com.naruhin.springbootexamplehillelhw5.domain.Dealer;
 import com.naruhin.springbootexamplehillelhw5.dto.DealerDTO;
-import com.naruhin.springbootexamplehillelhw5.service.AddressService;
-import com.naruhin.springbootexamplehillelhw5.service.DealerService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.Collection;
-import java.util.List;
 
-@RestController
-@RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-public class DealerRestController {
-    private final AddressService addressService;
-    private final DealerService dealerService;
+@Tag(name = "Dealer", description = "Car API")
 
-    public DealerRestController(AddressService addressService, DealerService dealerService) {
-        this.addressService = addressService;
-        this.dealerService = dealerService;
-    }
+public interface DealerRestController {
 
-    //Операция сохранения дилера в базу данных
-    @PostMapping("/dealers/{addressId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public DealerDTO saveAddress(@RequestBody DealerDTO dealerDTO, @PathVariable long addressId) {
-        Address address = addressService.getAddressByID(addressId);
-        Dealer dealer = DealerMapper.INSTANCE.toDealer(dealerDTO);
-        dealerDTO.setAddress(AddressMapper.INSTANCE.toAddressDto(address));
-        return DealerMapper.INSTANCE.toDealerDto(dealerService.saveDealer(dealer,addressId));
-    }
+    @Operation(summary = "Add a new dealer", description = "endpoint for creating an entity", tags = {"Dealer"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Dealer created"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "409", description = "Dealer already exists")})
+    DealerDTO saveAddress(DealerDTO dealerDTO, long addressId);
 
-    //Получение списка дилеров
-    @GetMapping("/dealers")
-    @ResponseStatus(HttpStatus.OK)
-    public Collection<DealerDTO> getAllDealers() {
-        Collection<Dealer> dealers = dealerService.getAllDealers();
-        return DealerMapper.INSTANCE.map((List<Dealer>) dealers);
-    }
+    @Operation(summary = "Get list of dealers", description = "endpoint for getting list of entities", tags = {"Dealer"})
+    Collection<DealerDTO> getAllDealers();
 
-    //Удаление всех дилеров
-    @DeleteMapping("/dealers")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeAllDealers() {
-        dealerService.removeAllDealers();
-    }
+    @Operation(summary = "Remove all dealers", description = "endpoint for deleting an entity", tags = {"Dealer"})
+    void removeAllDealers();
 
-    //Обновление дилера
-    @PutMapping("/dealers/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public DealerDTO updateDealer(@PathVariable("id") long id, @RequestBody DealerDTO dealerDTO) {
-        Dealer dealer = DealerMapper.INSTANCE.toDealer(dealerDTO);
-        return  DealerMapper.INSTANCE.toDealerDto(dealerService.updateDealer(id, dealer));
-    }
+    @Operation(summary = "Update a dealer", description = "endpoint for updating an entity", tags = {"Dealer"})
+    DealerDTO updateDealer(long id, DealerDTO dealerDTO);
 }
