@@ -1,58 +1,30 @@
 package com.naruhin.springbootexamplehillelhw5.web;
 
-import com.naruhin.springbootexamplehillelhw5.domain.Address;
-import com.naruhin.springbootexamplehillelhw5.repository.AddressRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import com.naruhin.springbootexamplehillelhw5.dto.AddressDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-import javax.persistence.EntityNotFoundException;
-import java.util.Collection;
+import java.util.List;
 
-@RestController
-@RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-public class AddressRestController {
+@Tag(name = "Address", description = "Car API")
 
-    private final AddressRepository addressRepository;
+public interface AddressRestController {
 
-    public AddressRestController(AddressRepository addressRepository) {
-        this.addressRepository = addressRepository;
-    }
+    @Operation(summary = "Add a new address", description = "endpoint for creating an entity", tags = {"Address"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Address created"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "409", description = "Address already exists")})
+    AddressDTO saveAddress(AddressDTO addressDTO);
 
-    //Операция сохранения машины в базу данных
-    @PostMapping("/addresses")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Address saveAddress(@RequestBody Address address) {
-        return addressRepository.save(address);
-    }
+    @Operation(summary = "Get list of addresses", description = "endpoint to get list of entities", tags = {"Address"})
+    List<AddressDTO> getAllAddresses();
 
-    //Получение списка машин
-    @GetMapping("/addresses")
-    @ResponseStatus(HttpStatus.OK)
-    public Collection<Address> getAllAddresses() {
-        return addressRepository.findAll();
-    }
+    @Operation(summary = "Remove all addresses", description = "remove all entities", tags = {"Address"})
+    void removeAllAddresses();
 
-    //Удаление всех машин
-    @DeleteMapping("/addresses")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeAllAddresses() {
-        addressRepository.deleteAll();
-    }
-
-    //Обновление машины
-    @PutMapping("/addresses/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Address updateAddress(@PathVariable("id") long id, @RequestBody Address address) {
-        return addressRepository.findById(id)
-                .map(entity -> {
-                        entity.setCountry(address.getCountry());
-                        entity.setCity(address.getCity());
-                        entity.setStreet(address.getStreet());
-                        entity.setZipCode(address.getZipCode());
-                        return addressRepository.save(entity);
-                })
-                .orElseThrow(() -> new EntityNotFoundException("Address with id = Not found"));
-    }
-
+    @Operation(summary = "Update a cars", description = "endpoint to update entity", tags = {"Address"})
+    AddressDTO updateAddress(long id, AddressDTO addressDTO);
 }

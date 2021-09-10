@@ -1,61 +1,30 @@
 package com.naruhin.springbootexamplehillelhw5.web;
 
-import com.naruhin.springbootexamplehillelhw5.domain.Address;
-import com.naruhin.springbootexamplehillelhw5.domain.Dealer;
-import com.naruhin.springbootexamplehillelhw5.domain.Manufacturer;
-import com.naruhin.springbootexamplehillelhw5.repository.AddressRepository;
-import com.naruhin.springbootexamplehillelhw5.repository.ManufacturerRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import com.naruhin.springbootexamplehillelhw5.dto.ManufacturerDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 
-@RestController
-@RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ManufacturerRestController {
-    private final ManufacturerRepository manufacturerRepository;
-    private final AddressRepository addressRepository;
+@Tag(name = "Manufacturer", description = "Car API")
 
-    public ManufacturerRestController(ManufacturerRepository manufacturerRepository, AddressRepository addressRepository) {
-        this.manufacturerRepository = manufacturerRepository;
-        this.addressRepository = addressRepository;
-    }
+public interface ManufacturerRestController {
+    @Operation(summary = "Add a new manufacturer", description = "endpoint for creating an entity", tags = {"Manufacturer"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Manufacturer created"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "409", description = "Manufacturer already exists")})
+    ManufacturerDTO saveManufacturer(ManufacturerDTO manufacturerDTO, long addressId);
 
-    //Операция сохранения производителя в базу данных
-    @PostMapping("/manufacturers/{addressId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Manufacturer saveManufacturer(@RequestBody Manufacturer manufacturer, @PathVariable long addressId) {
-        Address address = addressRepository.findById(addressId)
-                .orElseThrow(() -> new EntityNotFoundException("Address not found with id = " + addressId));
-        manufacturer.setAddress(address);
-        return manufacturerRepository.save(manufacturer);
-    }
+    @Operation(summary = "Get list of manufacturers", description = "endpoint for getting list of entities", tags = {"Manufacturer"})
+    Collection<ManufacturerDTO> getAllManufacturers();
 
-    //Получение списка производителей
-    @GetMapping("/manufacturers")
-    @ResponseStatus(HttpStatus.OK)
-    public Collection<Manufacturer> getAllManufacturers() {
-        return manufacturerRepository.findAll();
-    }
+    @Operation(summary = "Remove all manufacturers", description = "endpoint for deleting an entity", tags = {"Manufacturer"})
+    void removeAllManufacturers();
 
-    //Удаление всех производителей
-    @DeleteMapping("/manufacturers")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeAllManufacturers() {
-        manufacturerRepository.deleteAll();
-    }
+    @Operation(summary = "Update a manufacturer", description = "endpoint for updating an entity", tags = {"Manufacturer"})
+    ManufacturerDTO updateManufacturer(long id, ManufacturerDTO manufacturerDTO);
 
-    //Обновление производителя
-    @PutMapping("/manufacturers/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Manufacturer updateAddress(@PathVariable("id") long id, @RequestBody Manufacturer manufacturer) {
-        return manufacturerRepository.findById(id)
-                .map(entity -> {
-                    entity.setName(manufacturer.getName());
-                    return manufacturerRepository.save(entity);
-                })
-                .orElseThrow(() -> new EntityNotFoundException("Manufacturer with id = Not found"));
-    }
 }

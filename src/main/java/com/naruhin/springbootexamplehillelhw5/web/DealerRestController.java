@@ -1,61 +1,30 @@
 package com.naruhin.springbootexamplehillelhw5.web;
 
+import com.naruhin.springbootexamplehillelhw5.dto.DealerDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-import com.naruhin.springbootexamplehillelhw5.domain.Address;
-import com.naruhin.springbootexamplehillelhw5.domain.Dealer;
-import com.naruhin.springbootexamplehillelhw5.repository.AddressRepository;
-import com.naruhin.springbootexamplehillelhw5.repository.DealerRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-
-import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 
-@RestController
-@RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-public class DealerRestController {
-    private final AddressRepository addressRepository;
-    private final DealerRepository dealerRepository;
+@Tag(name = "Dealer", description = "Car API")
 
-    public DealerRestController(AddressRepository addressRepository, DealerRepository dealerRepository) {
-        this.addressRepository = addressRepository;
-        this.dealerRepository = dealerRepository;
-    }
+public interface DealerRestController {
 
-    //Операция сохранения дилера в базу данных
-    @PostMapping("/dealers/{addressId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Dealer saveAddress(@RequestBody Dealer dealer, @PathVariable long addressId) {
-        Address address = addressRepository.findById(addressId)
-                .orElseThrow(() -> new EntityNotFoundException("Address not found with id = " + addressId));
-        dealer.setAddress(address);
-        return dealerRepository.save(dealer);
-    }
+    @Operation(summary = "Add a new dealer", description = "endpoint for creating an entity", tags = {"Dealer"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Dealer created"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "409", description = "Dealer already exists")})
+    DealerDTO saveAddress(DealerDTO dealerDTO, long addressId);
 
-    //Получение списка дилеров
-    @GetMapping("/dealers")
-    @ResponseStatus(HttpStatus.OK)
-    public Collection<Dealer> getAllDealers() {
-        return dealerRepository.findAll();
-    }
+    @Operation(summary = "Get list of dealers", description = "endpoint for getting list of entities", tags = {"Dealer"})
+    Collection<DealerDTO> getAllDealers();
 
-    //Удаление всех дилеров
-    @DeleteMapping("/dealers")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeAllDealers() {
-        dealerRepository.deleteAll();
-    }
+    @Operation(summary = "Remove all dealers", description = "endpoint for deleting an entity", tags = {"Dealer"})
+    void removeAllDealers();
 
-    //Обновление дилера
-    @PutMapping("/dealers/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Dealer updateAddress(@PathVariable("id") long id, @RequestBody Dealer dealer) {
-        return dealerRepository.findById(id)
-                .map(entity -> {
-                    entity.setName(dealer.getName());
-                    return dealerRepository.save(entity);
-                })
-                .orElseThrow(() -> new EntityNotFoundException("Dealer with id = Not found"));
-    }
+    @Operation(summary = "Update a dealer", description = "endpoint for updating an entity", tags = {"Dealer"})
+    DealerDTO updateDealer(long id, DealerDTO dealerDTO);
 }
