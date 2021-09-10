@@ -1,61 +1,61 @@
 package com.naruhin.springbootexamplehillelhw5.web;
 
 
+import com.naruhin.springbootexamplehillelhw5.config.AddressMapper;
+import com.naruhin.springbootexamplehillelhw5.config.DealerMapper;
 import com.naruhin.springbootexamplehillelhw5.domain.Address;
 import com.naruhin.springbootexamplehillelhw5.domain.Dealer;
-import com.naruhin.springbootexamplehillelhw5.repository.AddressRepository;
-import com.naruhin.springbootexamplehillelhw5.repository.DealerRepository;
+import com.naruhin.springbootexamplehillelhw5.dto.DealerDTO;
+import com.naruhin.springbootexamplehillelhw5.service.AddressService;
+import com.naruhin.springbootexamplehillelhw5.service.DealerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DealerRestController {
-    private final AddressRepository addressRepository;
-    private final DealerRepository dealerRepository;
+    private final AddressService addressService;
+    private final DealerService dealerService;
 
-    public DealerRestController(AddressRepository addressRepository, DealerRepository dealerRepository) {
-        this.addressRepository = addressRepository;
-        this.dealerRepository = dealerRepository;
+    public DealerRestController(AddressService addressService, DealerService dealerService) {
+        this.addressService = addressService;
+        this.dealerService = dealerService;
     }
 
     //Операция сохранения дилера в базу данных
     @PostMapping("/dealers/{addressId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Dealer saveAddress(@RequestBody Dealer dealer, @PathVariable long addressId) {
-        Address address = addressRepository.findById(addressId)
-                .orElseThrow(() -> new EntityNotFoundException("Address not found with id = " + addressId));
-        dealer.setAddress(address);
-        return dealerRepository.save(dealer);
+    public DealerDTO saveAddress(@RequestBody DealerDTO dealerDTO, @PathVariable long addressId) {
+        Address address = addressService.getAddressByID(addressId);
+        Dealer dealer = DealerMapper.INSTANCE.toDealer(dealerDTO);
+        dealerDTO.setAddress(AddressMapper.INSTANCE.toAddressDto(address));
+        return DealerMapper.INSTANCE.toDealerDto(dealerService.saveDealer(dealer,addressId));
     }
 
     //Получение списка дилеров
     @GetMapping("/dealers")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Dealer> getAllDealers() {
-        return dealerRepository.findAll();
+    public Collection<DealerDTO> getAllDealers() {
+        Collection<Dealer> dealers = dealerService.getAllDealers();
+        return DealerMapper.INSTANCE.map((List<Dealer>) dealers);
     }
 
     //Удаление всех дилеров
     @DeleteMapping("/dealers")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeAllDealers() {
-        dealerRepository.deleteAll();
+        dealerService.removeAllDealers();
     }
 
     //Обновление дилера
     @PutMapping("/dealers/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Dealer updateAddress(@PathVariable("id") long id, @RequestBody Dealer dealer) {
-        return dealerRepository.findById(id)
-                .map(entity -> {
-                    entity.setName(dealer.getName());
-                    return dealerRepository.save(entity);
-                })
-                .orElseThrow(() -> new EntityNotFoundException("Dealer with id = Not found"));
+    public DealerDTO updateDealer(@PathVariable("id") long id, @RequestBody DealerDTO dealerDTO) {
+        Dealer dealer = DealerMapper.INSTANCE.toDealer(dealerDTO);
+        return  DealerMapper.INSTANCE.toDealerDto(dealerService.updateDealer(id, dealer));
     }
 }

@@ -1,103 +1,79 @@
 package com.naruhin.springbootexamplehillelhw5.web;
 
+import com.naruhin.springbootexamplehillelhw5.config.CarMapper;
+import com.naruhin.springbootexamplehillelhw5.config.ManufacturerMapper;
 import com.naruhin.springbootexamplehillelhw5.domain.Car;
-import com.naruhin.springbootexamplehillelhw5.domain.Dealer;
 import com.naruhin.springbootexamplehillelhw5.domain.Manufacturer;
-import com.naruhin.springbootexamplehillelhw5.domain.ServiceStation;
-import com.naruhin.springbootexamplehillelhw5.repository.CarRepository;
-import com.naruhin.springbootexamplehillelhw5.repository.DealerRepository;
-import com.naruhin.springbootexamplehillelhw5.repository.ManufacturerRepository;
-import com.naruhin.springbootexamplehillelhw5.repository.ServiceStationRepository;
+import com.naruhin.springbootexamplehillelhw5.dto.CarDTO;
+import com.naruhin.springbootexamplehillelhw5.service.CarService;
+import com.naruhin.springbootexamplehillelhw5.service.ManufacturerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CarRestController {
 
-    private final CarRepository repository;
-    private final ManufacturerRepository manufacturerRepository;
-    private final DealerRepository dealerRepository;
-    private final ServiceStationRepository serviceStationRepository;
+    private final CarService carService;
+    private final ManufacturerService manufacturerService;
 
-    public CarRestController(CarRepository repository, ManufacturerRepository manufacturerRepository, DealerRepository dealerRepository, ServiceStationRepository serviceStationRepository) {
-        this.repository = repository;
-        this.manufacturerRepository = manufacturerRepository;
-        this.dealerRepository = dealerRepository;
-        this.serviceStationRepository = serviceStationRepository;
+    public CarRestController(CarService carService, ManufacturerService manufacturerService) {
+        this.carService = carService;
+        this.manufacturerService = manufacturerService;
     }
-
 
     //Операция сохранения машины в базу данных
     @PostMapping("/cars/manufacturers/{manufacturerId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Car saveCar(@RequestBody Car car, @PathVariable long manufacturerId) {
-        Manufacturer manufacturer = manufacturerRepository.findById(manufacturerId)
-                .orElseThrow(() -> new EntityNotFoundException("Manufacturer not found with id = " + manufacturerId));
-        car.setManufacturer(manufacturer);
-        return repository.save(car);
+    public CarDTO saveCar(@RequestBody CarDTO carDTO, @PathVariable long manufacturerId) {
+        Manufacturer manufacturer = manufacturerService.getManufacturerByID(manufacturerId);
+        Car car = CarMapper.INSTANCE.toCar(carDTO);
+        carDTO.setManufacturer(ManufacturerMapper.INSTANCE.toManufacturerDto(manufacturer));
+        carService.saveCar(car,manufacturerId);
+        return CarMapper.INSTANCE.toCarDto(car);
     }
 
     //Получение списка машин
     @GetMapping("/cars")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Car> getAllCars() {
-        return repository.findAll();
+    public Collection<CarDTO> getAllCars() {
+        List<Car> cars = (List<Car>) carService.getAllCars();
+        return CarMapper.INSTANCE.map(cars);
     }
 
     //Получения машины по id
     @GetMapping("/cars/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<Car> getCarById(@PathVariable long id) {
-        return repository.findById(id);
+    public CarDTO getCarById(@PathVariable long id) {
+        Car car = carService.getCarById(id);
+        return CarMapper.INSTANCE.toCarDto(car);
     }
 
     //Обновление машины
     @PutMapping("/cars/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Car updateCar(@PathVariable("id") long id, @RequestBody Car car) {
-        return repository.findById(id)
-                .map(entity -> {
-                        entity.setManufacturer(car.getManufacturer());
-                        entity.setModel(car.getModel());
-                        entity.setBodyStyle(car.getBodyStyle());
-                        entity.setEngine(car.getEngine());
-                        entity.setColor(car.getColor());
-                        return repository.save(entity);
-                })
-                .orElseThrow(() -> new EntityNotFoundException("Car with id = Not found"));
+    public CarDTO updateCar(@PathVariable("id") long id, @RequestBody CarDTO carDTO) {
+        Car car = CarMapper.INSTANCE.toCar(carDTO);
+        return  CarMapper.INSTANCE.toCarDto(carService.updateCar(id, car));
     }
 
 
     @PatchMapping("/cars/{carId}/dealers/{dealerId}")
     @ResponseStatus(HttpStatus.OK)
-    public Car updateCarDealer(@PathVariable long carId, @PathVariable long dealerId){
-        Dealer dealer = dealerRepository.findById(dealerId)
-                .orElseThrow(() -> new EntityNotFoundException("Dealer not found with id = " + dealerId));
-        return repository.findById(carId)
-                .map(entity -> {
-                    entity.setDealer(dealer);
-                    return  repository.save(entity);
-                })
-                .orElseThrow(() -> new EntityNotFoundException("Car with id = Not found"));
+    public CarDTO updateCarDealer(@PathVariable long carId, @PathVariable long dealerId){
+        carService.updateCarDealer(carId,dealerId);
+        return CarMapper.INSTANCE.toCarDto(carService.getCarById(carId));
     }
 
     @PatchMapping("/cars/{carId}/service_stations/{serviceStationId}")
     @ResponseStatus(HttpStatus.OK)
-    public Car updateCarServiceStation(@PathVariable long carId, @PathVariable long serviceStationId){
-        ServiceStation serviceStation = serviceStationRepository.findById(serviceStationId)
-                .orElseThrow(() -> new EntityNotFoundException("Service Station not found with id = " + serviceStationId));
-        return repository.findById(carId)
-                .map(entity -> {
-                    entity.setServiceStation(serviceStation);
-                    return  repository.save(entity);
-                })
-                .orElseThrow(() -> new EntityNotFoundException("Car with id = Not found"));
+    public CarDTO updateCarServiceStation(@PathVariable long carId, @PathVariable long serviceStationId){
+        carService.updateCarServiceStation(carId,serviceStationId);
+        return CarMapper.INSTANCE.toCarDto(carService.getCarById(carId));
     }
 
 
@@ -105,14 +81,14 @@ public class CarRestController {
     @DeleteMapping("/cars")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeAllCars() {
-        repository.deleteAll();
+        carService.removeAllCars();
     }
 
     //Удаление по id
     @DeleteMapping("/cars/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeCarsById(@PathVariable long id) {
-        repository.deleteById(id);
+        carService.removeCarsById(id);
     }
 
 }
