@@ -7,9 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @OpenAPIDefinition(info = @Info(title = "Car API", version = "1.0", description = "Cars Information"))
-public class SpringBootExampleHillelHw5Application {
+public class CarManagementSystemApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringBootExampleHillelHw5Application.class, args);
+        SpringApplication.run(CarManagementSystemApplication.class, args);
     }
 }
