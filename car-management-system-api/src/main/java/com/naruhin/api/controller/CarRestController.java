@@ -1,6 +1,7 @@
 package com.naruhin.api.controller;
 
 import com.naruhin.api.dto.CarDTO;
+import com.naruhin.api.dto.CarUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -26,7 +27,7 @@ public interface CarRestController {
     CarDTO getCarById(long id);
 
     @Operation(summary = "Update car", description = "endpoint for updating an entity", tags = {"Car"})
-    CarDTO updateCar(long id, CarDTO carDTO);
+    CarDTO updateCar(long id, CarUpdateDTO carDTO);
 
     @Operation(summary = "Update car's dealer", description = "endpoint for updating dealer", tags = {"Car"})
     CarDTO updateCarDealer(long carId, long dealerId);

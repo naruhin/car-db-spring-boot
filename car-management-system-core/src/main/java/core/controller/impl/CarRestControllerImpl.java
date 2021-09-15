@@ -1,5 +1,6 @@
 package core.controller.impl;
 
+import com.naruhin.api.dto.CarUpdateDTO;
 import core.config.mapper.CarMapper;
 import core.domain.Car;
 import core.domain.Manufacturer;
@@ -59,7 +60,7 @@ public class CarRestControllerImpl implements CarRestController {
 
     @PutMapping("/cars/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CarDTO updateCar(@PathVariable("id") long id, @RequestBody CarDTO carDTO) {
+    public CarDTO updateCar(@PathVariable("id") long id, @RequestBody CarUpdateDTO carDTO) {
         Car car = CarMapper.INSTANCE.toCar(carDTO);
         return  CarMapper.INSTANCE.toCarDto(carService.updateCar(id, car));
     }

@@ -1,5 +1,6 @@
 package core.config.mapper;
 
+import com.naruhin.api.dto.CarUpdateDTO;
 import core.domain.Car;
 import com.naruhin.api.dto.CarDTO;
 import org.mapstruct.Mapper;
@@ -13,7 +14,9 @@ public interface CarMapper {
 
     CarDTO toCarDto(Car car);
 
-    Car toCar(CarDTO CarDTO);
+    Car toCar(CarUpdateDTO car);
+
+    Car toCar(CarDTO car);
 
     List<CarDTO> map(List<Car> cars);
 }
