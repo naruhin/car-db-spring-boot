@@ -1,8 +1,8 @@
 HELP.md
 target/
-.mvn/wrapper/
+.mvn
 mvnw
-mnnw.cmd
+mvnw.cmd
 !**/src/main/**
 !**/src/test/**
 
@@ -20,7 +20,6 @@ mnnw.cmd
 *.iws
 *.iml
 *.ipr
-screenshots
 
 ### NetBeans ###
 /nbproject/private/
