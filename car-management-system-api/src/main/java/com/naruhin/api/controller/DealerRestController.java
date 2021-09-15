@@ -1,6 +1,6 @@
-package com.naruhin.springbootexamplehillelhw5.web;
+package com.naruhin.api.controller;
 
-import com.naruhin.springbootexamplehillelhw5.dto.DealerDTO;
+import com.naruhin.api.dto.DealerDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
