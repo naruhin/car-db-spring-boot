@@ -47,6 +47,9 @@ There are GET, POST, PUT and PATCH requests.
 Import requests collection using link
 >https://www.getpostman.com/collections/37231fe0c58d2456d9f5
 
+Swagger documentation (when application is started):
+>http://localhost:8089/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/ 
+
 1. In Postman click on Import button.
 
 ![save entity to database](screenshots/import1.png "save entity to database")
