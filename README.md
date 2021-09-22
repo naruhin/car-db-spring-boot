@@ -1,4 +1,4 @@
-## :car: Database of cars 
+## :car: Car Management System
 
     This Spring Boot application is simple example of working Web Application on Spring Framework.
     It represents a simple API to work with PostgreSQL database that storage information about cars.
